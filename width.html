@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=q, initial-scale=1.0">
+    <title>MIN WIDTH</title>
+    <style>
+        div.circle {
+            background-image: url(ML.jpg);
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: burlywood;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 60px;
+        }
+
+        h1::after {
+            content: "lorem lorem lorem!";
+        }
+
+        div.container {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.circle {
+            background-image: url(ML.jpg);
+            background-size: 100%, cover;
+            /* background-repeat: no-repeat; */
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+
+        @media only screen and (max-width : 992px) {
+            body {
+                background-color: aqua;
+            }
+
+            div.circle {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media only screen and (max-width : 768px) {
+            body {
+                background-color: aquamarine;
+            }
+
+            h1::after {
+                content: ", World!";
+            }
+
+            div.circle {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media only screen and (max-width : 600px) {
+            body {
+                background-color: bisque;
+            }
+
+            h1::before {
+                content: "💖";
+            }
+
+            h1::after {
+                content: "🗿!";
+            }
+
+            div.circle {
+                width: 50px;
+                height: 50px;
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Hello </h1>
+    <div class="container">
+        <div class="circle"></div>
+    </div>
+</body>
+</html>
