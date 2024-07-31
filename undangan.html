@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,13 +10,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Moon+Dance&family=Permanent+Marker&family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,600;0,700;1,700&display=swap" rel="stylesheet">
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-        
-            document.querySelector(".btn").addEventListener('click', () => {
-                // alert("click!");
-                document.querySelector("body").classList.toggle('dark');
-                document.querySelector(".dark-mode-icon").classList.toggle('dark');
-            })
-    })
+            const body = document.querySelector("body");
+            const btn = document.querySelector(".btn");
+
+            if (localStorage.getItem("darkMode") === "enabled") {
+                body.classList.add("dark");
+            }
+
+            btn.addEventListener('click', () => {
+                body.classList.toggle('dark');
+
+                if (body.classList.contains('dark')) {
+                    localStorage.setItem("darkMode", "enabled");
+                } else {
+                    localStorage.removeItem("darkMode");
+                }
+            });
+
+            const countdown = () => {
+                const eventDate = new Date('February 15, 2030 00:00:00').getTime();
+                const now = new Date().getTime();
+                const distance = eventDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML =
+                    `<div class="countdown-item"><span>${days}</span> days</div>
+                    <div class="countdown-item"><span>${hours}</span> hours</div>
+                    <div class="countdown-item"><span>${minutes}</span> minutes</div>
+                    <div class="countdown-item"><span>${seconds}</span> seconds</div>`;
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    document.getElementById("countdown").innerHTML = "Event has started";
+                }
+            };
+
+            const interval = setInterval(countdown, 1000);
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.page').forEach(page => {
+                observer.observe(page);
+            });
+
+            document.querySelectorAll('.navigation a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
     </script>
     <style>
         * {
@@ -26,6 +82,7 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
+            transition: background-color 0.3s, color 0.3s, font-family 0.3s;
         }
 
         div.container {
@@ -37,21 +94,28 @@
         section.page {
             width: 100%;
             min-height: 100vh;
-            background-color: green;
             margin-bottom: 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
         }
 
-        p, h1{
+        section.page.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        p, h1 {
             text-align: center;
             margin-bottom: 20px;
         }
 
         h1 {
-            color: gold;
+            color: rgba(37, 29, 29, 0.873);
         }
 
         h1#senin {
@@ -61,8 +125,8 @@
 
         p#title1 {
             font-size: 3rem;
-            font-family:'Dancing Script', cursive;
-            color: yellow;
+            font-family: 'Dancing Script', cursive;
+            color: rgb(71, 41, 20);
         }
 
         p#date {
@@ -80,7 +144,7 @@
         }
 
         h2 {
-            font-family:'Dancing Script', cursive;
+            font-family: 'Dancing Script', cursive;
             font-size: 27.5px;
         }
 
@@ -89,50 +153,79 @@
         }
 
         h3 {
-            font-family:'Dancing Script', cursive;
+            font-family: 'Dancing Script', cursive;
             font-size: 27.5px;
             margin: 0px auto;
             padding-bottom: 10px;
         }
 
         section.page.one {
-            gap: 300pt;
-            /* background-image: url(backgroundpage1.webp); */
-            background-position: center;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             background-size: cover;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-image: url(lightmode.jpeg);
+            animation: fadeIn 2s ease-in-out;
         }
 
-        section.page.one > div > h1 {
+        div.border {
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        section.page.one>div>h1 {
             font-size: 30pt;
         }
 
         div.title {
-            font-family:'Dancing Script', cursive;
+            font-family: 'Dancing Script', cursive;
         }
 
         section.page.two {
             justify-content: space-evenly;
             padding: 20px;
-            background-image: url(schedule.jpg);
+            background-image: url(lightmode.jpeg);
             background-position: center;
             background-size: cover;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
         }
 
         section.page.three {
             justify-content: space-evenly;
             padding: 20px;
-            background-image: url(schedule.jpg);
+            background-image: url(lightmode.jpeg);
             background-position: center;
             background-size: cover;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
         }
 
         section.page.four {
             justify-content: space-evenly;
             padding: 20px;
-            background-image: url(schedule.jpg);
+            background-image: url(lightmode.jpeg);
             background-position: center;
             background-size: cover;
             align-items: normal;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
         }
 
         div#list {
@@ -150,12 +243,13 @@
             padding: 10pt;
             width: 250pt;
             min-height: 300pt;
-            background-color: rgba(110, 74, 74, 0.574);
+            background-color: rgba(54, 64, 146, 0.29);
             border-radius: 50px;
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
             align-items: center;
+            animation: fadeIn 2s ease-in-out;
         }
 
         div.circle {
@@ -163,9 +257,9 @@
             height: 150pt;
             border-radius: 75pt;
             background-image: url(circlebackground.webp);
-            background-size: 100%, cover;
+            background-size: cover;
             margin-bottom: 50px;
-            
+            animation: scaleUpDown 3s infinite;
         }
 
         div.line {
@@ -175,8 +269,18 @@
             margin: 10px;
         }
 
+        @keyframes scaleUpDown {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
         h4 {
-            font-family:'Dancing Script', cursive;
+            font-family: 'Dancing Script', cursive;
             font-size: 27.5px;
             margin: 0px auto;
             padding-bottom: 10px;
@@ -185,82 +289,255 @@
         section.page.five {
             justify-content: space-evenly;
             padding: 20px;
-            background-image: url(schedule.jpg);
+            background-image: url(lightmode.jpeg);
             background-position: center;
             background-size: cover;
             align-items: normal;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        body.dark {
+            background-color: rgb(28, 18, 18);
+            color: #ffffff;
+        }
+
+        body.dark section.page {
+            background-color: #1e1e1e;
+        }
+
+        body.dark section.page.one {
+            background-image: url(darkmode3.jpg);
+        }
+
+        body.dark section.page.two,
+        body.dark section.page.three,
+        body.dark section.page.four,
+        body.dark section.page.five {
+            background-image: url(darkmode3.jpg);
+        }
+
+        body.dark h1 {
+            color: #f5a623;
+        }
+
+        body.dark h1#senin {
+            color: #f5a623;
+        }
+
+        body.dark p#title1 {
+            color: #ffdd57;
+        }
+
+        body.dark p#date {
+            color: #f5a623;
+        }
+
+        body.dark div.card {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .animated-text {
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+
+        .fadeIn {
+            animation-name: fadeIn;
+        }
+
+        .slideInLeft {
+            animation-name: slideInLeft;
+        }
+
+        .slideInRight {
+            animation-name: slideInRight;
+        }
+
+        .bounce {
+            animation-name: bounce;
+        }
+
+        .btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1111;
+            display: flex;
+        }
+
+        .btn:hover {
+            background-color: #444;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 10px;
+            transition: 0.3s;
+            z-index: 1111;
+        }
+
+        .navigation a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navigation a:hover {
+            background-color: #444;
+        }
+
+        .countdown-item {
+            display: inline-block;
+            margin: 0 10px;
+            text-align: center;
+        }
+
+        .countdown-item span {
+            display: block;
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Dancing Script', cursive;
+            font-size: 27.5px;
+        }
+
+        body.dark .countdown-item span {
+            color: #ffdd57;
+        }
+
+        body.dark .countdown-item {
+            color: #f5a623;
         }
     </style>
 </head>
+
 <body>
+    <button class="btn">Dark Mode</button>
+    <div class="navigation">
+        <a href="#section1">📔</a>
+        <a href="#section2">👰‍♂️</a>
+        <a href="#section3">👰‍♀️</a>
+        <a href="#section4">🗒️</a>
+        <a href="#section5">⏲️</a>
+    </div>
     <div class="container">
-        <section class="page one">
-            <div class="title">
+        <section id="section1" class="page one">
+            <div class="title animated-text fadeIn">
                 <p id="title1">The Wedding of</p>
                 <h1>Dalang & Siti</h1>
-                <p id="date">Minggu, 30 February 2023</p>
+                <p id="date">Minggu, 15 February 2030</p>
                 <img src="" alt="" class="src">
             </div>
 
-            <div class="guest-name">
+            <div class="border">
+                <img src="https://png.pngtree.com/png-clipart/20230410/ourmid/pngtree-beautiful-circle-border-with-green-and-gold-leaves-png-image_6697106.png" alt="" class="border">
+            </div>
+            <div class="guest-name animated-text slideInLeft">
                 <p id="muthu"> Kepada Yth.</p>
                 <p id="muthu">Muthu, Ph.D.</p>
             </div>
         </section>
-    <section class="page two">
-        <h2>The Beloved</h2>
-        <h1 id="dalang">Dalang & Siti</h1>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci cum consequatur inventore, nemo deleniti soluta suscipit, non dolore illo quas fuga officiis possimus deserunt repellendus perspiciatis reiciendis tempore repudiandae? Rem?.</p>
-        <div class="card">
-            <div class="circle"></div>
-            <h1 id="senin">Prof. Isnin Bin Khamis</h1>
-            <div class="line"></div>
-            <p>Putra Pertama</p>
-            <p>Bapak Argus</p>
-            <p>&</p>
-            <p>Ibu Wati</p>
-        </div>
-    </section>
-    <section class="page three">
-        <h2>The Beloved</h2>
-        <h1 id="dalang">Dalang & Siti</h1>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci cum consequatur inventore, nemo deleniti soluta suscipit, non dolore illo quas fuga officiis possimus deserunt repellendus perspiciatis reiciendis tempore repudiandae? Rem?.</p>
-        <div class="card">
-            <div class="circle"></div>
-            <h1 id="senin">Dr. Siti Phei Liang</h1>
-            <div class="line"></div>
-            <p>Putri Pertama</p>
-            <p>Bapak Ahliong</p>
-            <p>&</p>
-            <p>Ibu Lingling</p>
-        </div>
-    </section>
-    <section>
-        <section class="page four">
-            <h3>Our Wedding Schedule's</h3>
-            <div id="list">
+        <section id="section2" class="page two">
+            <h2 class="animated-text bounce">The Beloved</h2>
+            <h1 id="dalang" class="animated-text slideInRight">Dalang & Siti</h1>
+            <p class="animated-text fadeIn">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci cum consequatur inventore, nemo deleniti soluta suscipit, non dolore illo quas fuga officiis possimus deserunt repellendus perspiciatis reiciendis tempore repudiandae? Rem?.</p>
+            <div class="card">
+                <div class="circle"></div>
+                <h1 id="senin" class="animated-text bounce">Prof. Isnin Bin Khamis</h1>
+                <div class="line"></div>
+                <p>Putra Pertama</p>
+                <p>Bapak Argus</p>
+                <p>&</p>
+                <p>Ibu Wati</p>
+            </div>
+        </section>
+        <section id="section3" class="page three">
+            <h2 class="animated-text bounce">The Beloved</h2>
+            <h1 id="dalang" class="animated-text slideInRight">Dalang & Siti</h1>
+            <p class="animated-text fadeIn">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci cum consequatur inventore, nemo deleniti soluta suscipit, non dolore illo quas fuga officiis possimus deserunt repellendus perspiciatis reiciendis tempore repudiandae? Rem?.</p>
+            <div class="card">
+                <div class="circle"></div>
+                <h1 id="senin" class="animated-text bounce">Dr. Siti Phei Liang</h1>
+                <div class="line"></div>
+                <p>Putri Pertama</p>
+                <p>Bapak Ahliong</p>
+                <p>&</p>
+                <p>Ibu Lingling</p>
+            </div>
+        </section>
+        <section id="section4" class="page four">
+            <h3 class="animated-text slideInLeft">Our Wedding Schedule's</h3>
+            <div id="list" class="animated-text fadeIn">
                 <ul>
                     <li>Bride's welcome</li>
-                    <li>Lorem, ipsum.</li>
-                    <li>Bridal blessing</li>
-                    <li>Lorem, ipsum.</li>
-                    <li>Eating together</li>
-                    <li>Lorem, ipsum.</li>
-                    <li>Drink together</li>
-                    <li>Lorem, ipsum.</li>
-                    <li>Final party</li>
                     <li>Lorem, ipsum.</li>
                 </ul>
             </div>
         </section>
-        <section>
-            <section class="page five">
-                <h4>Wedding Address</h4>
-                <p id="taksam">Jl. Taskam , Kelenteng Chaw Ni Am</p>
-                <img src="kelenteng2.jpg" alt="" height="350px" width="460.30px">
-            </section>
+        <section id="section5" class="page five">
+            <h3 class="animated-text slideInRight">The Event Will Start In:</h3>
+            <div id="countdown" class="animated-text fadeIn"></div>
         </section>
-    </section>
     </div>
 </body>
 </html>
